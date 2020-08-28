@@ -1,0 +1,36 @@
+#!/bin/bash
+
+if [[ $# -lt 2 ]]; then
+	echo "Need at least two parameters"
+	echo "First parameter -e (show even lines) or -o (show odd lines)"
+	echo "Second: files to read"
+	exit 1
+fi
+
+mode=$1
+shift
+
+if [[ $mode = "-e" ]] || [[ $mode = "-o" ]]; then
+	while [[ $# != 0 ]]; do
+		if [[ -f $1 ]]; then
+			count=1 
+			echo "### Displaying lines of file '$1'"
+			while IFS= read -r; do
+				if [[ $mode = "-e" ]] && [[ $(( $count % 2 )) -eq 0 ]]; then
+					echo "Line $count: $fileLine"
+				elif [[ $mode = "-o" ]] && [[ $(( $count % 2 )) -ne 0 ]]; then
+					echo "Line $count: $fileLine"
+				fi
+				count=$(( $count + 1 ))
+			done < "$1"
+			shift
+		else
+			echo "### '$1' is not a regular file"
+			exit 1
+		fi
+	done
+	exit 0
+else
+	echo "First parameter not allowed, should be -o or -e"
+	exit 1
+fi

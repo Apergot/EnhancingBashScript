@@ -1,0 +1,20 @@
+#!/bin/bash
+
+if [[ $# -lt 1 ]]; then
+	echo "You should provide at least one argument"
+	echo "First argument: number of files"
+	exit 1
+elif [[ $# -ge 2 ]]; then
+	echo "Too many arguments, just need one: num of files"
+	exit 1
+else
+	while IFS=: read -r user pass uid gid desc home shells; do
+		find / -user $user -type f -printf "%u\n" 2>/dev/null | sort | uniq -c | while IFS=' ' read numOfFiles userFile; do
+			echo "$user"
+			if [[ numOfFiles -ge $1 ]]; then
+				echo "User: $user	Files: $numOfFiles"
+			fi
+		done
+		exit 0
+	done < "/etc/passwd"
+fi

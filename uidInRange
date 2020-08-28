@@ -1,0 +1,27 @@
+#!/bin/bash
+
+if [[ $# -lt 2 ]]; then
+	UID_MIN=$(grep '^UID_MIN' /etc/login.defs | cut -f4) #command-substitution
+	UID_MAX=$(grep '^UID_MAX' /etc/login.defs | cut -f4)
+
+	while IFS=: read -r user pass uid gid desc home shells; do
+		if [[ uid -le $UID_MAX  ]] && [[ uid -ge $UID_MIN ]]; then
+			echo $user
+		fi
+	done < "/etc/passwd"
+	exit 0
+
+elif [[ $# -gt 2 ]]; then
+	echo "Wrong number of arguments"
+	echo "Expecting two arguments: max and min uid to retrieve users"
+	exit 1
+else
+	min=$1
+	max=$2
+	while IFS=: read -r user pass uid gid desc home shells; do
+		if [[ uid -le $max  ]] && [[ uid -ge $min ]]; then
+			echo $user
+		fi
+	done < "/etc/passwd"
+	exit 0
+fi

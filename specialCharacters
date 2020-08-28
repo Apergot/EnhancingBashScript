@@ -1,0 +1,25 @@
+#!/bin/bash
+
+# Double quotes - protect the text inside them from being split into multiple words or arguments
+# allow substitutions to occur.
+echo "I am $LOGNAME"
+
+# Single quotes - protect the text inside them so that it has a literal meaning, special characters
+# are passed over and multiple words are prevented from being split.
+echo 'I am $LOGNAME'
+
+# Escape (backslash) - prevents the next character from being interpreted as a special character
+# this works outside of quoting, inside double quotes, and generally ignored in single quotes.
+echo An open \ \ \ space
+
+# Expansion $() - introduces various types of expansion: parameter expansion and arithmetic expansion
+echo "My computer is $(hostname)"
+
+# Redirection - redirect command's output or input to a file.
+echo boo > file
+
+# Arithmetic expansion
+echo $(( 5 + 5 ))
+
+# Arithmetic expression
+(( 5 > 0 )) && echo "Five is greater than zero"
