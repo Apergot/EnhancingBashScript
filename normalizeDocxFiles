@@ -1,0 +1,21 @@
+#!/bin/bash
+
+if [[ $# -gt 1 ]]; then
+	echo "Number of parameters incorrect"
+	echo "Expected one or none"
+	exit 1
+elif [[ $# -eq 1 ]]; then
+	path=$1
+else
+	path="."
+fi
+
+find $path -type f -regex ".*.[dD][oO][cC][xX]?" | while read docxs ;do
+	notNormalizedFilename=$(basename $docxs)
+	fileDirectory=$(dirname docxs)
+	normalizedFilename=$(echo $notNormalizedFilename | tr '[:upper:]' '[:lower:]')
+	if [[ "$notNormalizedFilename" != "$normalizedFilename" ]]; then
+		mv $docxs $fileDirectory/$normalizedFilename
+		echo -e "$( date --rfc-3339=seconds )\t$docxs\t$normalizedFilename" >> /var/log/cambiosdocx
+	fi
+done
